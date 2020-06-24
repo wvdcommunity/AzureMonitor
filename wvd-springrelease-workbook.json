@@ -1,0 +1,2314 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# Windows Virtual Desktop"
+      },
+      "name": "header"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "value::selected"
+        ],
+        "parameters": [
+          {
+            "id": "b859a03f-2283-43dd-8536-42714bbfced6",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "query": "summarize Count = count() by subscriptionId\r\n| project value = strcat('/subscriptions/', subscriptionId), label = subscriptionId, Selected = Count >= 0",
+            "crossComponentResources": [
+              "value::selected"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "bab77e5f-3597-4d1f-beb4-878b8b1aab3e",
+            "version": "KqlParameterItem/1.0",
+            "name": "SubscriptionID",
+            "type": 6,
+            "isRequired": true,
+            "query": "resourcecontainers\r\n | where type == \"microsoft.resources/subscriptions\"\r\n | summarize Count = count() by subscriptionId\r\n | project Label = subscriptionId, Id = subscriptionId, Selected = Count >= 0",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "8df9c309-e7d1-43ad-b2ad-2d190c0c4e60",
+            "version": "KqlParameterItem/1.0",
+            "name": "Workspace",
+            "type": 5,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| summarize by id, name\r\n| project id",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": [
+              "/subscriptions/182b812e-c741-4b45-93c6-26bdc3e4353b/resourceGroups/wvd-spring-update/providers/Microsoft.OperationalInsights/workspaces/wvdlogsetspn"
+            ],
+            "label": "Log Analytics Workspace"
+          },
+          {
+            "id": "2e3dfd9b-2d0f-4feb-94e8-107f220c4e28",
+            "version": "KqlParameterItem/1.0",
+            "name": "ResourceGroup",
+            "type": 5,
+            "isRequired": true,
+            "query": "resources\r\n| where type contains  \"desktopvirtualization\"\r\n| summarize Count = count() by resourceGroup\r\n| project Label = resourceGroup, Id = resourceGroup, Selected = Count >= 0",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "951b5870-e216-45c6-b159-34150868a46e",
+            "version": "KqlParameterItem/1.0",
+            "name": "HostPool",
+            "type": 5,
+            "isRequired": true,
+            "query": "resources\r\n| where type == \"microsoft.desktopvirtualization/hostpools\"\r\n| summarize Count = count() by name, id\r\n| project Label = name, Id = id, Selected = Count >= 1",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "value": "thovuy-pool",
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "timeContext": {
+              "durationMs": 0
+            },
+            "timeContextFromParameter": "TimeRange",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources"
+          },
+          {
+            "id": "966a75f4-f4a4-4404-b649-67da45ddf636",
+            "version": "KqlParameterItem/1.0",
+            "name": "WVDHosts",
+            "type": 5,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"{SubscriptionID}/resourcegroups/{ResourceGroup}/providers/Microsoft.DesktopVirtualization/hostpools/{HostPool}/sessionhosts?api-version=2019-01-23-preview\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value\",\"columns\":[{\"path\":\"$.name\",\"columnid\":\"Name\"}]}}]}",
+            "value": [
+              "value::all"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "timeContext": {
+              "durationMs": 0
+            },
+            "timeContextFromParameter": "TimeRange",
+            "queryType": 12
+          },
+          {
+            "id": "04a8ead2-1fb2-4666-a7b0-6d92e3c29b46",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "type": 4,
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 43200000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 172800000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2592000000
+                },
+                {
+                  "durationMs": 5184000000
+                },
+                {
+                  "durationMs": 7776000000
+                }
+              ],
+              "allowCustom": true
+            },
+            "resourceType": "microsoft.insights/components",
+            "value": {
+              "durationMs": 7776000000
+            }
+          }
+        ],
+        "style": "pills",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 2"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "This workbook relies on the following:\r\n* Windows Virtual Desktop spring release with WCD Diagnostic Logs enabled\r\n* Azure Monitor VMInsights with Map enabled\r\n* Azure Monitor Log Analytics workspace, with the performance counter and event log collection as detailed in *[this document](dummyurl)*.\r\n* AAD Diagnostic Logs enabled"
+      },
+      "conditionalVisibility": {
+        "parameterName": "DebugMode",
+        "comparison": "isEqualTo",
+        "value": "True"
+      },
+      "name": "abouttext"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Overview",
+            "subTarget": "Overview",
+            "style": "link"
+          },
+          {
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Session Details",
+            "subTarget": "SessionDetails",
+            "style": "link"
+          },
+          {
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Session Diagnostics",
+            "subTarget": "SessionDiagnostics",
+            "style": "link"
+          },
+          {
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "User Specific Reporting",
+            "subTarget": "UserSpecific",
+            "style": "link"
+          },
+          {
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Session Performance",
+            "subTarget": "SessionPerformance",
+            "style": "link"
+          },
+          {
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Host Performance",
+            "subTarget": "HostPerformance",
+            "style": "link"
+          },
+          {
+            "cellValue": "selectedTab",
+            "linkTarget": "parameter",
+            "linkLabel": "Disk Performance",
+            "subTarget": "DiskPerformance",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "tabs"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "# WVD Overview"
+            },
+            "name": "text - 4"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "resources\r\n| where type contains  \"desktopvirtualization\"\r\n| parse type with * \"microsoft.desktopvirtualization/\" TypeName\r\n| summarize Resources=count() by TypeName\r\n| order by Resources desc",
+              "size": 1,
+              "title": "WVD Resources",
+              "noDataMessage": "No WVD resources detected. Please select the subscription that contains your WVD resources",
+              "noDataMessageStyle": 4,
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "showBorder": false,
+                "titleContent": {
+                  "columnMatch": "TypeName",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Resources",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "wvdresourcestiles",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nWVDConnections\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, SessionHostName)\r\n| where Computername in (WVDHosts)\r\n|sort by TimeGenerated asc, CorrelationId\r\n|summarize Sessions = dcount(CorrelationId) by bin(TimeGenerated, 1d)",
+              "size": 1,
+              "title": "Daily Connections - Rolling 7 days",
+              "noDataMessage": "No sessions detected in the last 7 days.",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "barchart",
+              "chartSettings": {
+                "xAxis": "TimeGenerated"
+              }
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "rollingsessioncount",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "SigninLogs\r\n| where ResourceDisplayName == \"Windows Virtual Desktop\"\r\n| summarize arg_max(CorrelationId, *) by CorrelationId\r\n| project [\"City\"]= LocationDetails.city, LocationDetails.geoCoordinates.longitude, LocationDetails.geoCoordinates.latitude",
+              "size": 1,
+              "title": "Logon Location Heatmap - Rolling 7 days",
+              "noDataMessage": "No logons detected in the last 7 days",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "map",
+              "mapSettings": {
+                "locInfo": "LatLong",
+                "latitude": "LocationDetails_geoCoordinates_latitude",
+                "longitude": "LocationDetails_geoCoordinates_longitude",
+                "sizeSettings": "City",
+                "sizeAggregation": "Count",
+                "labelSettings": "City",
+                "legendMetric": "City",
+                "numberOfMetrics": 5,
+                "legendAggregation": "Count",
+                "itemColorSettings": {
+                  "nodeColorField": "City",
+                  "colorAggregation": "Count",
+                  "type": "heatmap",
+                  "heatmapPalette": "hotCold"
+                }
+              }
+            },
+            "customWidth": "34",
+            "showPin": true,
+            "name": "mapoflogons",
+            "styleSettings": {
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nWVDConnections\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, SessionHostName)\r\n| where Computername in (WVDHosts)\r\n| where Type =~\"WVDConnections\" and State =~ \"Connected\" \r\n| extend Multi=split(_ResourceId, \"/\")\r\n| project ResourceAlias, HostPool=toupper(HP=Multi[8]), SessionHostName , UserName ,CState=iff(SessionHostOSVersion==\"<>\",\"Failure\",\"Success\"), CorrelationId, TimeGenerated, ResourceGroup=Multi[4], DesktopGroup_s=toupper(strcat(RG=Multi[4],\".\", HP=Multi[8])), StartTime=TimeGenerated\r\n| join (WVDConnections\r\n| where State == \"Completed\"\r\n| project EndTime=TimeGenerated, CorrelationId)\r\non CorrelationId\r\n| project Duration = EndTime - StartTime,UserName\r\n| summarize Duration=avg(Duration) by UserName\r\n| sort by Duration desc\r\n| take 5\r\n",
+              "size": 1,
+              "title": "Top 5 Average Session Durations by User",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "DurationInSeconds",
+                    "formatter": 3,
+                    "formatOptions": {
+                      "palette": "blue"
+                    },
+                    "numberFormat": {
+                      "unit": 24,
+                      "options": {
+                        "style": "decimal",
+                        "useGrouping": false
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "usersessionlogonduration",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"{SubscriptionID}/resourcegroups/{ResourceGroup}/providers/Microsoft.DesktopVirtualization/hostpools/{HostPool}?api-version=2019-01-23-preview\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.properties\",\"columns\":[{\"path\":\"$.hostPoolType\",\"columnid\":\"HostPoolType\"},{\"path\":\"$.maxSessionLimit\",\"columnid\":\"MaxSessionLimit\"}]}}]}",
+              "size": 4,
+              "queryType": 12
+            },
+            "customWidth": "33",
+            "name": "hostpoolspecifics"
+          },
+          {
+            "type": 12,
+            "content": {
+              "version": "NotebookGroup/1.0",
+              "groupType": "editable",
+              "title": "Pool Health Overview",
+              "items": [
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nHeartbeat\r\n| extend HostPool = '{HostPool}'\r\n| extend FullName = strcat(HostPool, \"/\", Computer)\r\n| where FullName in (WVDHosts)\r\n| join (Perf\r\n| where (ObjectName == \"Terminal Services\" and CounterName == \"Active Sessions\")\r\n| make-series TSActTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project TSActTrend, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"Memory\" and CounterName == \"% Committed Bytes In Use\")\r\n| make-series MemTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project MemTrend, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"Processor\" and CounterName == \"% Processor Time\")\r\n| make-series CPUTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project CPUTrend, Computer) on Computer\r\n| project Computer, FullName, HostPool, TSActTrend, MemTrend, CPUTrend",
+                    "size": 4,
+                    "timeContext": {
+                      "durationMs": 0
+                    },
+                    "timeContextFromParameter": "TimeRange",
+                    "queryType": 0,
+                    "resourceType": "microsoft.operationalinsights/workspaces",
+                    "crossComponentResources": [
+                      "{Workspace}"
+                    ],
+                    "visualization": "tiles",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Computer",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": null,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "FullName",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "HostPool",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "TSActTrend",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "MemTrend",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "CPUTrend",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        }
+                      ]
+                    },
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "Computer",
+                        "formatter": 1,
+                        "formatOptions": {}
+                      },
+                      "showBorder": false
+                    }
+                  },
+                  "customWidth": "33",
+                  "name": "hostperf",
+                  "styleSettings": {
+                    "margin": "1px",
+                    "padding": "1px",
+                    "progressStyle": "none"
+                  }
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":null,\"headers\":[],\"method\":\"GET\",\"path\":\"{SubscriptionID}/resourcegroups/{ResourceGroup}/providers/Microsoft.DesktopVirtualization/hostpools/{HostPool}/sessionhosts?api-version=2019-01-23-preview\",\"urlParams\":[],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.value\",\"columns\":[{\"path\":\"$.properties.status\",\"columnid\":\"Status\"},{\"path\":\"$.name\",\"columnid\":\"Name\"},{\"path\":\"$.properties.lastHeartBeat\",\"columnid\":\"LastHeartbeat\"},{\"path\":\"$.properties.sessions\",\"columnid\":\"Sessions\"}]}}]}",
+                    "size": 4,
+                    "queryType": 12,
+                    "visualization": "tiles",
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "Status",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "Name",
+                          "formatter": 13,
+                          "formatOptions": {
+                            "linkTarget": null,
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "LastHeartbeat",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "Sessions",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        }
+                      ],
+                      "labelSettings": [
+                        {
+                          "columnId": "Status"
+                        },
+                        {
+                          "columnId": "Name"
+                        },
+                        {
+                          "columnId": "LastHeartbeat"
+                        },
+                        {
+                          "columnId": "Sessions",
+                          "label": "Last Session Count"
+                        }
+                      ]
+                    },
+                    "tileSettings": {
+                      "titleContent": {
+                        "columnMatch": "Name",
+                        "formatter": 1,
+                        "formatOptions": {}
+                      },
+                      "subtitleContent": {
+                        "columnMatch": "Status",
+                        "formatOptions": {}
+                      },
+                      "leftContent": {
+                        "columnMatch": "Sessions",
+                        "formatter": 12,
+                        "formatOptions": {
+                          "palette": "auto"
+                        },
+                        "numberFormat": {
+                          "unit": 17,
+                          "options": {
+                            "style": "decimal",
+                            "useGrouping": false,
+                            "maximumFractionDigits": 2,
+                            "maximumSignificantDigits": 3
+                          }
+                        }
+                      },
+                      "showBorder": false
+                    }
+                  },
+                  "customWidth": "33",
+                  "name": "hostpooloverview",
+                  "styleSettings": {
+                    "margin": "1px",
+                    "padding": "1px",
+                    "progressStyle": "none"
+                  }
+                },
+                {
+                  "type": 3,
+                  "content": {
+                    "version": "KqlItem/1.0",
+                    "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"eb82698f-2418-4770-8607-a730f61540f9\",\"mergeType\":\"innerunique\",\"leftTable\":\"hostpooloverview\",\"rightTable\":\"hostperf\",\"leftColumn\":\"Name\",\"rightColumn\":\"FullName\"}],\"projectRename\":[{\"originalName\":\"[hostperf].HostPool\",\"mergedName\":\"HostPool\",\"fromId\":\"unknown\"},{\"originalName\":\"[hostperf].FullName\",\"mergedName\":\"FullName\",\"fromId\":\"unknown\"},{\"originalName\":\"[hostperf].Computer\",\"mergedName\":\"Computer\",\"fromId\":\"eb82698f-2418-4770-8607-a730f61540f9\"},{\"originalName\":\"[hostpooloverview].Status\",\"mergedName\":\"Status\",\"fromId\":\"eb82698f-2418-4770-8607-a730f61540f9\"},{\"originalName\":\"[hostpooloverview].Name\",\"mergedName\":\"Name\",\"fromId\":\"eb82698f-2418-4770-8607-a730f61540f9\"},{\"originalName\":\"[hostpooloverview].LastHeartbeat\",\"mergedName\":\"LastHeartbeat\",\"fromId\":\"eb82698f-2418-4770-8607-a730f61540f9\"},{\"originalName\":\"[hostpooloverview].Sessions\",\"mergedName\":\"Last Session Count\",\"fromId\":\"eb82698f-2418-4770-8607-a730f61540f9\"},{\"originalName\":\"[hostperf].TSActTrend\",\"mergedName\":\"TSActTrend\",\"fromId\":\"unknown\"},{\"originalName\":\"[hostperf].MemTrend\",\"mergedName\":\"MemTrend\",\"fromId\":\"eb82698f-2418-4770-8607-a730f61540f9\"},{\"originalName\":\"[hostperf].CPUTrend\",\"mergedName\":\"CPUTrend\",\"fromId\":\"eb82698f-2418-4770-8607-a730f61540f9\"},{\"originalName\":\"[hostperf].NWSTrend\"},{\"originalName\":\"[hostperf].NWRTrend\"}]}",
+                    "size": 0,
+                    "queryType": 7,
+                    "gridSettings": {
+                      "formatters": [
+                        {
+                          "columnMatch": "$gen_group",
+                          "formatter": 16,
+                          "formatOptions": {
+                            "showIcon": true
+                          }
+                        },
+                        {
+                          "columnMatch": "HostPool",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "FullName",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "Computer",
+                          "formatter": 7,
+                          "formatOptions": {
+                            "linkTarget": "Resource"
+                          }
+                        },
+                        {
+                          "columnMatch": "Status",
+                          "formatter": 11,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "Name",
+                          "formatter": 5,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "LastHeartbeat",
+                          "formatter": 6,
+                          "formatOptions": {}
+                        },
+                        {
+                          "columnMatch": "Last Session Count",
+                          "formatter": 3,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        },
+                        {
+                          "columnMatch": "TSActTrend",
+                          "formatter": 21,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        },
+                        {
+                          "columnMatch": "MemTrend",
+                          "formatter": 21,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        },
+                        {
+                          "columnMatch": "CPUTrend",
+                          "formatter": 21,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        },
+                        {
+                          "columnMatch": "NWRTrend",
+                          "formatter": 21,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        },
+                        {
+                          "columnMatch": "NWSTrend",
+                          "formatter": 21,
+                          "formatOptions": {
+                            "palette": "blue"
+                          }
+                        }
+                      ],
+                      "hierarchySettings": {
+                        "treeType": 1,
+                        "groupBy": [
+                          "HostPool"
+                        ],
+                        "expandTopLevel": true
+                      },
+                      "labelSettings": [
+                        {
+                          "columnId": "HostPool"
+                        },
+                        {
+                          "columnId": "FullName"
+                        },
+                        {
+                          "columnId": "Computer"
+                        },
+                        {
+                          "columnId": "Status"
+                        },
+                        {
+                          "columnId": "Name"
+                        },
+                        {
+                          "columnId": "LastHeartbeat"
+                        },
+                        {
+                          "columnId": "Last Session Count"
+                        },
+                        {
+                          "columnId": "TSActTrend",
+                          "label": "Terminal Services Active Sessions"
+                        },
+                        {
+                          "columnId": "MemTrend",
+                          "label": "Memory Utilisation"
+                        },
+                        {
+                          "columnId": "CPUTrend",
+                          "label": "CPU Utilisation"
+                        }
+                      ]
+                    },
+                    "sortBy": []
+                  },
+                  "showPin": false,
+                  "name": "hostandperfmerge"
+                }
+              ]
+            },
+            "name": "poolhealthoverview"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "Overview"
+      },
+      "name": "Overview"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "# Session Details"
+            },
+            "name": "text - 4"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nWVDConnections\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, SessionHostName)\r\n| where Computername in (WVDHosts)\r\n| where State == \"Connected\"\r\n| summarize UserCount = count() by UserName\r\n| sort by UserCount desc\r\n| take 5",
+              "size": 1,
+              "title": "Top 5 Active Users",
+              "noDataMessage": "No active users detected in the selected time period.",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "UserName",
+                  "formatter": 1,
+                  "formatOptions": {}
+                },
+                "leftContent": {
+                  "columnMatch": "UserCount",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "blue"
+                  }
+                },
+                "showBorder": true,
+                "rowLimit": 10,
+                "size": "auto"
+              },
+              "graphSettings": {
+                "type": 2,
+                "topContent": {
+                  "columnMatch": "UserName",
+                  "formatter": 1,
+                  "formatOptions": {}
+                },
+                "centerContent": {
+                  "columnMatch": "UserCount",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "blue"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": false,
+                      "maximumFractionDigits": 2,
+                      "maximumSignificantDigits": 3
+                    }
+                  }
+                },
+                "nodeIdField": "UserName",
+                "nodeSize": null,
+                "staticNodeSize": 100,
+                "colorSettings": null,
+                "hivesMargin": 5
+              }
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "top5users",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nWVDConnections\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, SessionHostName)\r\n| where Computername in (WVDHosts)\r\n| summarize ConnectCount = count() by ConnectionType",
+              "size": 1,
+              "title": "WVD Connections by ConnectionType",
+              "noDataMessage": "No connections detection in the selected time period",
+              "noDataMessageStyle": 4,
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "piechart"
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "WVDCOnnectionsbyType",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nWVDConnections\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, SessionHostName)\r\n| where Computername in (WVDHosts)\r\n| where State == \"Connected\"\r\n| extend ClientOSType = pack(\"ClientOSVersion\", ClientOS)\r\n| summarize AggregatedValue = count() by ClientOS",
+              "size": 1,
+              "title": "Client Connection Operating System",
+              "noDataMessage": "No client connections detected in the selected time frame.",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "piechart",
+              "chartSettings": {
+                "showMetrics": false,
+                "showLegend": true
+              }
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "clientosbreakdown",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "<hr>"
+            },
+            "name": "text - 8"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Terminal Services\" \r\n| where CounterName == \"Active Sessions\" \r\n| summarize arg_max(TimeGenerated, *) by Computer\r\n| project Computer, CounterName, CounterValue\r\n| order by CounterValue desc\r\n| take 5",
+              "size": 1,
+              "title": "Top 5 hosts with connected sessions",
+              "noDataMessage": "No session information to display. Please ensure that you have enabled collection of the Terminal Services performance counters into your workspace.have enabled the ",
+              "noDataMessageStyle": 4,
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1,
+                  "formatOptions": {}
+                },
+                "subtitleContent": {
+                  "columnMatch": "CounterName",
+                  "formatOptions": {}
+                },
+                "leftContent": {
+                  "columnMatch": "CounterValue",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                },
+                "showBorder": true,
+                "size": "auto"
+              },
+              "chartSettings": {
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Active Sessions",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Inactive Sessions",
+                    "color": "yellow"
+                  }
+                ]
+              }
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "currentsessionstatus",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Terminal Services\" \r\n| where CounterName == \"Inactive Sessions\" \r\n| summarize arg_max(TimeGenerated, *) by Computer\r\n| project Computer, CounterName, CounterValue\r\n| order by CounterValue desc\r\n| take 5",
+              "size": 1,
+              "title": "Top 5 host with disconnected sessions",
+              "noDataMessage": "No disconnected sessions detected in the selected time frame",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1,
+                  "formatOptions": {}
+                },
+                "subtitleContent": {
+                  "columnMatch": "CounterName",
+                  "formatOptions": {}
+                },
+                "leftContent": {
+                  "columnMatch": "CounterValue",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": false,
+                      "maximumFractionDigits": 2,
+                      "maximumSignificantDigits": 3
+                    }
+                  }
+                },
+                "showBorder": true,
+                "size": "auto"
+              }
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "top5disconnectedsessions",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Terminal Services\" \r\n| where CounterName == \"Total Sessions\" \r\n| summarize arg_max(TimeGenerated, *) by Computer\r\n| project Computer, CounterName, CounterValue\r\n| order by CounterValue desc\r\n| take 5",
+              "size": 1,
+              "title": "Total Sessions top 5 Hosts",
+              "noDataMessage": "No total sessions detected in the selected time range. If there have been sessions, please ensure that the Terminal Services counters are being collected into your workspace.",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Computer",
+                  "formatter": 1,
+                  "formatOptions": {}
+                },
+                "subtitleContent": {
+                  "columnMatch": "CounterName",
+                  "formatOptions": {}
+                },
+                "leftContent": {
+                  "columnMatch": "CounterValue",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "maximumSignificantDigits": 3,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                },
+                "showBorder": true
+              }
+            },
+            "customWidth": "33",
+            "showPin": true,
+            "name": "totalsessions",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where CounterName == \"Active Sessions\"\r\n| extend ActiveSessions = toint(CounterValue)\r\n| project Computer, ActiveTimeStamp=TimeGenerated, ActiveSessions \r\n| join kind= inner (\r\n   Perf\r\n   | where CounterName == \"Inactive Sessions\"\r\n   | extend totalinactivesessions = toint(CounterValue)\r\n   | extend InactiveSessions = totalinactivesessions - 2\r\n   | project Computer, InactiveTimeStamp=TimeGenerated, InactiveSessions  \r\n) on Computer \r\n| where (ActiveTimeStamp - InactiveTimeStamp) between (0min .. 15s)\r\n| project ActiveSessions, InactiveSessions, bin(ActiveTimeStamp, 5m)\r\n\r\n",
+              "size": 0,
+              "aggregation": 2,
+              "title": "Session Status History",
+              "noDataMessage": "No Session History information. If you have had active sessions in the selected time period, please ensure that the collection of the Terminal Services counters into your workspace has been enabled.",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "areachart"
+            },
+            "name": "sessionstatushistory",
+            "styleSettings": {
+              "padding": "2px"
+            }
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "parameters": [
+                {
+                  "id": "c2ae42db-61cc-4904-be12-4f6dabef3af1",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "TSSessions",
+                  "label": "Terminal Server Session Counters",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "Perf\r\n| where ObjectName == \"Terminal Services\"\r\n| summarize by CounterName",
+                  "crossComponentResources": [
+                    "{Workspace}"
+                  ],
+                  "value": [
+                    "Inactive Sessions",
+                    "Active Sessions"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ]
+                  },
+                  "timeContext": {
+                    "durationMs": 0
+                  },
+                  "timeContextFromParameter": "TimeRange",
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "parameters - 11"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nlet Counter = dynamic([{TSSessions}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Terminal Services\" and CounterName in (Counter)\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 1h), CounterName, Computer",
+              "size": 0,
+              "aggregation": 3,
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "areachart",
+              "chartSettings": {
+                "showLegend": true
+              }
+            },
+            "name": "query - 12"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "SessionDetails"
+      },
+      "name": "sessiondetails"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "# Session Diagnostics"
+            },
+            "name": "text - 0"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "WVDErrors\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName in ('{HostPool}')\r\n| summarize count() by UserName",
+              "size": 1,
+              "title": "Top users encountering errors",
+              "noDataMessage": "No errors detected in the selected time period",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "piechart"
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "wvderrorsbyuser",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nWVDConnections\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, SessionHostName)\r\n| where Computername in (WVDHosts)\r\n| where State == \"Connected\"\r\n| extend ClientOSType = pack(\"ClientOSVersion\", ClientOS)\r\n| project _ResourceId, TimeGenerated, UserName, State, ClientOS, ClientVersion, ClientType, ConnectionType, ResourceAlias, SessionHostName, SessionHostIPAddress",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "WVD Connected Session Details",
+              "noDataMessage": "No Connected Sessions detected in the selected time period",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "showExportToExcel": true,
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "filter": true
+              }
+            },
+            "name": "wvdconnectedsessionsdetails"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "WVDErrors\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName in ('{HostPool}')\r\n| where ServiceError ==\"false\"\r\n| summarize usercount = count(UserName) by CodeSymbolic\r\n| project CodeSymbolic, usercount\r\n| sort by usercount desc",
+              "size": 1,
+              "title": "WVD Errors by type",
+              "noDataMessage": "No errors reported in the selected time period",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "exportFieldName": "label",
+              "exportParameterName": "wvderror",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "barchart"
+            },
+            "showPin": true,
+            "name": "wvdconnectionerrorsbytype",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let errorcode = iff(isnotnull('{wvderror}'),errorcode = '{wvderror}', errorcode = 'All');\r\nWVDErrors\r\n| where CodeSymbolic == errorcode\r\n| project TimeGenerated,  _ResourceId, UserName, ActivityType, Source, Code, CodeSymbolic, Message, ServiceError, CorrelationId\r\n| sort by TimeGenerated desc\r\n| take 20",
+              "size": 0,
+              "title": "WVD Errors by type - {wvderror}",
+              "noDataMessage": "Please select one of the error categories in the graph above to display the error logs",
+              "noDataMessageStyle": 4,
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "filter": true
+              }
+            },
+            "name": "wvderrorsspecificcode"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "SessionDiagnostics"
+      },
+      "name": "sessiondiagnostics"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "# User Specific Reporting"
+            },
+            "name": "text - 0"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "parameters": [
+                {
+                  "id": "e1e164a5-c5e8-4219-997a-fc580dc3f593",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "UserName",
+                  "type": 1,
+                  "description": "Please enter the username you would like to explore",
+                  "isRequired": true,
+                  "value": "wvd9",
+                  "timeContext": {
+                    "durationMs": 0
+                  },
+                  "timeContextFromParameter": "TimeRange",
+                  "resourceType": "microsoft.insights/components"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.insights/components"
+            },
+            "name": "parameters - 1"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "WVDConnections\r\n|where UserName contains '{UserName}'\r\n|take 100\r\n|sort by TimeGenerated asc, CorrelationId\r\n|summarize  Connectcount = dcount(CorrelationId) by bin(TimeGenerated, 1d)",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "Connections per day for user {UserName}",
+              "noDataMessage": "No connections detected for this user in the specified time frame",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "barchart"
+            },
+            "name": "ConnectionsbyUser",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px"
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "WVDConnections\r\n|where UserName contains '{UserName}'\r\n|sort by TimeGenerated asc, CorrelationId\r\n| project TimeGenerated, CorrelationId, _ResourceId, SessionHostName, SessionHostIPAddress, UserName, State, ClientOS, ClientVersion, ClientType, ConnectionType, ResourceAlias, TenantId",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "All connections for user {UserName}",
+              "noDataMessage": "No connections detected in the specified time frame",
+              "noDataMessageStyle": 4,
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "CorrelationId",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  },
+                  {
+                    "columnMatch": "TenantId",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  },
+                  {
+                    "columnMatch": "ClientIPAddress",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  },
+                  {
+                    "columnMatch": "SessionHostSxSStackVersion",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  }
+                ],
+                "rowLimit": 100,
+                "filter": true,
+                "labelSettings": [
+                  {
+                    "columnId": "TimeGenerated"
+                  },
+                  {
+                    "columnId": "CorrelationId"
+                  },
+                  {
+                    "columnId": "_ResourceId",
+                    "label": "Host Pool"
+                  },
+                  {
+                    "columnId": "SessionHostName"
+                  },
+                  {
+                    "columnId": "SessionHostIPAddress"
+                  },
+                  {
+                    "columnId": "UserName"
+                  },
+                  {
+                    "columnId": "State"
+                  },
+                  {
+                    "columnId": "ClientOS"
+                  },
+                  {
+                    "columnId": "ClientVersion"
+                  },
+                  {
+                    "columnId": "ClientType"
+                  },
+                  {
+                    "columnId": "ConnectionType"
+                  },
+                  {
+                    "columnId": "ResourceAlias"
+                  },
+                  {
+                    "columnId": "TenantId"
+                  }
+                ]
+              }
+            },
+            "name": "AllConnectionsforUser"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let Events = WVDConnections \r\n| where UserName contains '{UserName}' ;\r\nEvents\r\n| where State == \"Connected\"\r\n| project CorrelationId , UserName, ResourceAlias , StartTime=TimeGenerated\r\n| join (Events\r\n| where State == \"Completed\"\r\n| project EndTime=TimeGenerated, CorrelationId)\r\non CorrelationId\r\n| project Duration = EndTime - StartTime, ResourceAlias\r\n| sort by Duration desc\r\n",
+              "size": 1,
+              "showAnalytics": true,
+              "title": "Connection Duration for user {UserName}",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ]
+            },
+            "customWidth": "50",
+            "name": "ConnectionsDurationbyUser"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "WVDErrors\r\n| where UserName contains '{UserName}'\r\n| project TimeGenerated, CorrelationId, _ResourceId, UserName, ActivityType, Source, Code, CodeSymbolic, Message, TenantId",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "WVD Errors by User - {UserName}",
+              "noDataMessage": "No errors detected in the specified time range",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "showExportToExcel": true,
+              "exportToExcelOptions": "all",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "CorrelationId",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  },
+                  {
+                    "columnMatch": "TenantId",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  }
+                ],
+                "rowLimit": 100,
+                "filter": true,
+                "labelSettings": [
+                  {
+                    "columnId": "TimeGenerated"
+                  },
+                  {
+                    "columnId": "CorrelationId"
+                  },
+                  {
+                    "columnId": "_ResourceId",
+                    "label": "Host Pool"
+                  },
+                  {
+                    "columnId": "UserName"
+                  },
+                  {
+                    "columnId": "ActivityType"
+                  },
+                  {
+                    "columnId": "Source"
+                  },
+                  {
+                    "columnId": "Code"
+                  },
+                  {
+                    "columnId": "CodeSymbolic"
+                  },
+                  {
+                    "columnId": "Message"
+                  },
+                  {
+                    "columnId": "TenantId"
+                  }
+                ]
+              }
+            },
+            "name": "WVDErrorsbyUser"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "UserSpecific"
+      },
+      "name": "UserSpecificReportinggroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "# Session Performance"
+            },
+            "name": "text - 0"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| where ObjectName == \"Process\" and CounterName == \"% User Time\"\r\n| join\r\n(\r\nVMProcess\r\n| where UserName !contains \"system\" and UserName !contains \"service\"\r\n| extend InstanceName = ExecutableName\r\n| project TimeGenerated, InstanceName, Computer, UserName, UserDomain\r\n)\r\non InstanceName\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), InstanceName, CounterName, UserName, Computer\r\n",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "% User Time by Process",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "linechart"
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "session-percusertime",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| where ObjectName == \"Process\" and CounterName == \"% Processor Time\"\r\n| join\r\n(\r\nVMProcess\r\n| where UserName !contains \"system\" and UserName !contains \"service\"\r\n| extend InstanceName = ExecutableName\r\n| project TimeGenerated, InstanceName, Computer, UserName, UserDomain\r\n)\r\non InstanceName\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), InstanceName, CounterName, UserName, Computer\r\n",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "% User Time by Process",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "linechart"
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "session-percproctime",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| where ObjectName == \"Process\" and CounterName == \"IO Write Operations/sec\"\r\n| join\r\n(\r\nVMProcess\r\n| where UserName !contains \"system\" and UserName !contains \"service\"\r\n| extend InstanceName = ExecutableName\r\n| project TimeGenerated, InstanceName, Computer, UserName, UserDomain\r\n)\r\non InstanceName\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), InstanceName, CounterName, UserName, Computer\r\n",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "Disk IO Write Operations/sec by Process",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "linechart"
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "session-iowrite",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Perf\r\n| where ObjectName == \"Process\" and CounterName == \"IO Read Operations/sec\"\r\n| join\r\n(\r\nVMProcess\r\n| where UserName !contains \"system\" and UserName !contains \"service\"\r\n| extend InstanceName = ExecutableName\r\n| project TimeGenerated, InstanceName, Computer, UserName, UserDomain\r\n)\r\non InstanceName\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), InstanceName, CounterName, UserName, Computer\r\n",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "Disk IO Read Operations/sec by Process",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "linechart"
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "session-ioread",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "SessionPerformance"
+      },
+      "name": "sessionperformance"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "# Host Performance"
+            },
+            "name": "text - 0"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nHeartbeat\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| join (Perf\r\n| where (ObjectName == \"Terminal Services\" and CounterName == \"Active Sessions\")\r\n| make-series TSActTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project TSActTrend, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"Memory\" and CounterName == \"% Committed Bytes In Use\")\r\n| make-series MemTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project MemTrend, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"Processor\" and CounterName == \"% Processor Time\")\r\n| make-series CPUTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project CPUTrend, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"Network Adapter\" and CounterName == \"Bytes Received/sec\")\r\n| make-series NWRTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project NWRTrend, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"Network Adapter\" and CounterName == \"Bytes Sent/sec\")\r\n| make-series NWSTrend = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project NWSTrend, Computer) on Computer\r\n| project Computer, TSActTrend, MemTrend, CPUTrend, NWRTrend, NWSTrend",
+              "size": 1,
+              "showAnalytics": true,
+              "title": "Host Performance Overview",
+              "noDataMessage": "No performance counters to display. Please confirm that you have enabled the performance counter collection in your Log Analytics workspace",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "TSActTrend",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "MemTrend",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "CPUTrend",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "NWRTrend",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "NWSTrend",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "Computer"
+                  },
+                  {
+                    "columnId": "TSActTrend",
+                    "label": "Terminal Services Active Sessions"
+                  },
+                  {
+                    "columnId": "MemTrend",
+                    "label": "Memory % Committed Bytes in Use"
+                  },
+                  {
+                    "columnId": "CPUTrend",
+                    "label": "Processor % Processor Time"
+                  },
+                  {
+                    "columnId": "NWRTrend",
+                    "label": "Network  Bytes Read/sec"
+                  },
+                  {
+                    "columnId": "NWSTrend",
+                    "label": "Network Bytes Sent/sec"
+                  }
+                ]
+              }
+            },
+            "name": "hostperfoverview"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where (ObjectName == \"Logical Disk\" or ObjectName == \"LogicalDisk\") and CounterName contains \"%\" and InstanceName != \"_Total\" and InstanceName !contains \"HarddiskVolume\"\r\n| project TimeGenerated, Computer, ObjectName, CounterName, InstanceName, CounterValue \r\n| summarize arg_max(TimeGenerated, *) by Computer, InstanceName\r\n| extend SpaceUsed = (100-CounterValue)\r\n| top 10 by SpaceUsed desc",
+              "size": 1,
+              "showAnalytics": true,
+              "title": "Top 10 Hosts - Disk % Free Space",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "TimeGenerated",
+                    "formatter": 6,
+                    "formatOptions": {},
+                    "dateFormat": {
+                      "formatName": "longDatePattern"
+                    }
+                  },
+                  {
+                    "columnMatch": "ObjectName",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  },
+                  {
+                    "columnMatch": "CounterName",
+                    "formatter": 5,
+                    "formatOptions": {}
+                  },
+                  {
+                    "columnMatch": "CounterValue",
+                    "formatter": 5,
+                    "formatOptions": {},
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal",
+                        "useGrouping": false,
+                        "maximumFractionDigits": 1
+                      }
+                    }
+                  },
+                  {
+                    "columnMatch": "SpaceUsed",
+                    "formatter": 3,
+                    "formatOptions": {
+                      "max": 100,
+                      "palette": "greenRed"
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal"
+                      }
+                    }
+                  }
+                ],
+                "labelSettings": [
+                  {
+                    "columnId": "Computer"
+                  },
+                  {
+                    "columnId": "InstanceName"
+                  },
+                  {
+                    "columnId": "TimeGenerated",
+                    "label": "Last Counter Date",
+                    "comment": "Most recent performance counter collected"
+                  },
+                  {
+                    "columnId": "ObjectName"
+                  },
+                  {
+                    "columnId": "CounterName"
+                  },
+                  {
+                    "columnId": "CounterValue"
+                  },
+                  {
+                    "columnId": "SpaceUsed",
+                    "label": "% Disk Space Used"
+                  }
+                ]
+              }
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "hostperf-top10diskspace",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Processor\" and CounterName == \"% Processor Time\"\r\n| project TimeGenerated, Computer, ObjectName, CounterName, InstanceName, CounterValue \r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 1h), Computer\r\n| summarize arg_max(TimeGenerated, *) by Computer\r\n| top 10 by AggregatedValue desc",
+              "size": 1,
+              "showAnalytics": true,
+              "title": "Top 10 Hosts - Processor Utilisation",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "AggregatedValue",
+                    "formatter": 3,
+                    "formatOptions": {
+                      "palette": "greenRed"
+                    },
+                    "numberFormat": {
+                      "unit": 1,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "customWidth": "50",
+            "showPin": true,
+            "name": "hostperf-top10cpu",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"LogicalDisk\" and CounterName == \"% Free Space\" \r\n| where InstanceName <> \"_Total\" \r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), Computer, InstanceName ",
+              "size": 1,
+              "aggregation": 3,
+              "title": "Logical Disk Space Used by Host",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "linechart",
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 1,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true,
+                      "maximumFractionDigits": 2
+                    }
+                  },
+                  "max": 100
+                }
+              }
+            },
+            "customWidth": "25",
+            "showPin": true,
+            "name": "diskspacebyhost",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Processor\" and CounterName == \"% Processor Time\"\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), Computer, InstanceName ",
+              "size": 1,
+              "aggregation": 3,
+              "title": "Processor % Processor Time per host",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "timechart",
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 1,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true,
+                      "maximumFractionDigits": 1
+                    }
+                  },
+                  "max": 100
+                }
+              }
+            },
+            "customWidth": "25",
+            "showPin": true,
+            "name": "hostperf-processor",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Memory\" and CounterName == \"% Committed Bytes In Use\"\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), Computer",
+              "size": 1,
+              "aggregation": 3,
+              "title": "Memory % Committed bytes in use per Host",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "timechart",
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 1,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true,
+                      "maximumFractionDigits": 1
+                    }
+                  },
+                  "max": 100
+                }
+              }
+            },
+            "customWidth": "25",
+            "showPin": true,
+            "name": "hostperf-memory",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Network Interface\" \r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), Computer, InstanceName, CounterName ",
+              "size": 1,
+              "aggregation": 3,
+              "title": "Network Usage per host",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "timechart",
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 11,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true,
+                      "maximumFractionDigits": 1
+                    }
+                  }
+                }
+              }
+            },
+            "customWidth": "25",
+            "showPin": true,
+            "name": "hostperf-network",
+            "styleSettings": {
+              "margin": "1px",
+              "padding": "1px",
+              "showBorder": true
+            }
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"RemoteFX Network\" and InstanceName matches regex @\"rdp-sxs\\d{9}\\s\\d{0,6}\" and CounterName == \"Current TCP RTT\" and CounterValue > 0\r\n| summarize  RTTLatency =avg(CounterValue) by Computer, bin(TimeGenerated, 5m), InstanceName\r\n| order by RTTLatency desc",
+              "size": 0,
+              "aggregation": 3,
+              "title": "RTT Latency avg by Computer",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "timechart"
+            },
+            "name": "hostperf-rtt"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "HostPerformance"
+      },
+      "name": "hostperformance"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "# Disk Performance"
+            },
+            "name": "text - 0"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"PhysicalDisk\" and InstanceName !contains \"Total\"\r\n| join (Perf\r\n| where (ObjectName == \"PhysicalDisk\" and CounterName == \"Avg. Disk Bytes/Read\")\r\n| make-series AvgDiskBytesRead = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project AvgDiskBytesRead, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"PhysicalDisk\" and CounterName == \"Avg. Disk Bytes/Write\")\r\n| make-series AvgDiskBytesWrite = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project AvgDiskBytesWrite, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"PhysicalDisk\" and CounterName == \"Avg. Disk sec/Write\")\r\n| make-series AvgDiskSecBytesWrite = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project AvgDiskSecBytesWrite, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"PhysicalDisk\" and CounterName == \"Avg. Disk sec/Read\")\r\n| make-series DiskReadsSec = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project DiskReadsSec, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"PhysicalDisk\" and CounterName == \"Avg. Disk Bytes/Transfer\")\r\n| make-series AvgDiskSecBytesTransfer = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project AvgDiskSecBytesTransfer, Computer) on Computer\r\n| join (Perf\r\n| where (ObjectName == \"PhysicalDisk\" and CounterName == \"Avg. Disk sec/Transfer\")\r\n| make-series AvgDiskSecTransfer = avg(CounterValue) default=0 on TimeGenerated from {TimeRange:start} to {TimeRange:end} step {TimeRange:grain} by ObjectName, Computer | project AvgDiskSecTransfer, Computer) on Computer\r\n| project Computer, AvgDiskBytesRead, AvgDiskBytesWrite, AvgDiskSecBytesWrite, DiskReadsSec, AvgDiskSecBytesTransfer, AvgDiskSecTransfer",
+              "size": 0,
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "AvgDiskBytesRead",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "AvgDiskBytesWrite",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "AvgDiskSecBytesWrite",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "DiskReadsSec",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "AvgDiskSecBytesTransfer",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "AvgDiskSecTransfer",
+                    "formatter": 21,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  }
+                ]
+              }
+            },
+            "name": "query - 3"
+          },
+          {
+            "type": 9,
+            "content": {
+              "version": "KqlParameterItem/1.0",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "parameters": [
+                {
+                  "id": "36641c91-e8dc-4fb1-a4f0-0f981443a37b",
+                  "version": "KqlParameterItem/1.0",
+                  "name": "DiskCounter",
+                  "label": "Disk Counter",
+                  "type": 2,
+                  "isRequired": true,
+                  "multiSelect": true,
+                  "quote": "'",
+                  "delimiter": ",",
+                  "query": "Perf\r\n| where ObjectName == \"LogicalDisk\"\r\n| summarize Count = count() by CounterName\r\n| project value = CounterName, label = CounterName, Selected = Count >= 0",
+                  "crossComponentResources": [
+                    "{Workspace}"
+                  ],
+                  "value": [
+                    "Free Megabytes"
+                  ],
+                  "typeSettings": {
+                    "additionalResourceOptions": [
+                      "value::all"
+                    ],
+                    "showDefault": false
+                  },
+                  "timeContext": {
+                    "durationMs": 0
+                  },
+                  "timeContextFromParameter": "TimeRange",
+                  "queryType": 0,
+                  "resourceType": "microsoft.operationalinsights/workspaces"
+                }
+              ],
+              "style": "pills",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces"
+            },
+            "name": "parameters - 2"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nlet Counter = dynamic([{DiskCounter}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"LogicalDisk\" and CounterName in (Counter) and InstanceName !contains \"Total\"\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 10m), CounterName, Computer, InstanceName",
+              "size": 0,
+              "showAnalytics": true,
+              "title": "{DiskCounter}",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "linechart",
+              "chartSettings": {
+                "showLegend": true
+              }
+            },
+            "name": "diskperfall"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "selectedTab",
+        "comparison": "isEqualTo",
+        "value": "DiskPerformance"
+      },
+      "name": "diskperformancegroup"
+    }
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
