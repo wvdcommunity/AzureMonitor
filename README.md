@@ -11,6 +11,13 @@ This workbook visualises the health and performance of WVD (Spring Release). To 
 * `Terminal Services(*)\Inactive Sessions`
 * `Terminal Services(*)\Total Sessions`
 * `LogicalDisk(*)\% Free Space`
+* `LogicalDisk(*)\Avg. Disk sec/Read`
+* `LogicalDisk(*)\Avg. Disk sec/Write`
+* `LogicalDisk(*)\Current Disk Queue Length`
+* `LogicalDisk(*)\Disk Reads/sec`
+* `LogicalDisk(*)\Disk Transfers/sec`
+* `LogicalDisk(*)\Disk Writes/sec`
+* `LogicalDisk(*)\Free Megabytes`
 * `Processor(_Total)\% Processor Time`
 * `Memory(*)\% Committed Bytes In Use`
 * `Network Adapter(*)\Bytes Received/sec`
