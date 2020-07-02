@@ -10,7 +10,8 @@ To be able to use this workbook, you will need to enable the following:
 -	Windows Virtual Desktop environment based on ARM (spring 2020 update)
 -	Log Analytics Workspace
 -	The following RBAC – IAM object roles are at least needed:
-o	Monitoring Contributor
-o	Log Analytics Contributor
-o	Security Administrator 
+
+-	Monitoring Contributor
+-	Log Analytics Contributor
+-	Security Administrator 
 
