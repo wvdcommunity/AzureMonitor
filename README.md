@@ -1,42 +1,16 @@
-# Windows Virtual Desktop
+# Windows Virtual Desktop Azure Monitor documentation for spring update (ARM).
 
-This workbook visualises the health and performance of WVD (Spring Release). To be able to use this workbook, you will need to enable the following:
+Document is a result of the collaboration of different teams within Microsoft – to empower our customers to do monitoring better with WVD. 
+By GBB, Fast Track, CAT and CSU - a true Microsoft Community driven project. 
 
-1. [VMInsights](https://docs.microsoft.com/en-us/azure/azure-monitor/insights/vminsights-enable-overview) on the hosts
-2. [WVD Diagnostic Logs](https://docs.microsoft.com/en-us/azure/virtual-desktop/diagnostics-log-analytics#push-diagnostics-data-to-your-workspace)
-3. Collection of the following [performance counters](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/data-sources-performance-counters) in your Log Analytics workspace:
+Please visit this Windows IT Pro [blog article](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/bg-p/Windows10Blog) to learn about the steps to deploy this Azure Monitor workbook for Windows Virtual Desktop (ARM-based)
 
-* `Terminal Services Session(*)\% Processor Time`
-* `Terminal Services(*)\Active Sessions`
-* `Terminal Services(*)\Inactive Sessions`
-* `Terminal Services(*)\Total Sessions`
-* `LogicalDisk(*)\% Free Space`
-* `LogicalDisk(*)\Avg. Disk sec/Read`
-* `LogicalDisk(*)\Avg. Disk sec/Write`
-* `LogicalDisk(*)\Current Disk Queue Length`
-* `LogicalDisk(*)\Disk Reads/sec`
-* `LogicalDisk(*)\Disk Transfers/sec`
-* `LogicalDisk(*)\Disk Writes/sec`
-* `LogicalDisk(*)\Free Megabytes`
-* `Processor(_Total)\% Processor Time`
-* `Memory(*)\% Committed Bytes In Use`
-* `Network Adapter(*)\Bytes Received/sec`
-* `Network Adapter(*)\Bytes Sent/sec`
-* `Process(*)\% Processor Time`
-* `Process(*)\% User Time`
-* `Process(*)\IO Read Operations/sec`
-* `Process(*)\IO Write Operations/sec`
-* `Process(*)\Thread Count`
-* `Process(*)\Working Set`
-* `RemoteFX Graphics(*)\Average Encoding Time`
-* `RemoteFX Graphics(*)\Frames Skipped/Second - Insufficient Client Resources`
-* `RemoteFX Graphics(*)\Frames Skipped/Second - Insufficient Network Resources` 
-* `RemoteFX Graphics(*)\Frames Skipped/Second - Insufficient Server Resources`
-* `RemoteFX Network(*)\Current TCP Bandwidth`
-* `RemoteFX Network(*)\Current TCP RTT`
-* `RemoteFX Network(*)\Current UDP Bandwidth` 
-* `RemoteFX Network(*)\Current UDP RTT`
+To be able to use this workbook, you will need to enable the following:
 
+-	Windows Virtual Desktop environment based on ARM (spring 2020 update)
+-	Log Analytics Workspace
+-	The following RBAC – IAM object roles are at least needed:
+o	Monitoring Contributor
+o	Log Analytics Contributor
+o	Security Administrator 
 
-
-To use this workbook, create a new workbook in Azure Monitor, and copy the code from this sample into the code area for the workbook, replacing the sample code in this workbook
