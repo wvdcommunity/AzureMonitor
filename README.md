@@ -13,4 +13,4 @@ To be able to use this workbook, you will need the following pre-requirements:
 -	Log Analytics Contributor
 -	Security Administrator 
 
-# Please visit this Windows IT Pro [blog article](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/bg-p/Windows10Blog) to learn about the steps to deploy this Azure Monitor workbook for Windows Virtual Desktop (ARM-based)
+# Please visit this Windows IT Pro [blog article](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/bg-p/Windows10Blog) for all the technical steps. 
