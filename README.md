@@ -3,7 +3,7 @@
 Document is a result of the collaboration of different teams within Microsoft – to empower our customers to do monitoring better with WVD. 
 By GBB, Fast Track, CAT and CSU - a true Microsoft Community driven project. 
 
-To be able to use this workbook, you will need to enable the following:
+To be able to use this workbook, you will need the following pre-requirements:
 
 -	Windows Virtual Desktop environment based on ARM (spring 2020 update)
 -	Log Analytics Workspace
