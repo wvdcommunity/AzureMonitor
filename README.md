@@ -13,4 +13,4 @@ To be able to use this workbook, you will need the following pre-requirements:
 -	Log Analytics Contributor
 -	Security Administrator 
 
-# Please visit this Windows IT Pro [blog article](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/bg-p/Windows10Blog) for all the technical steps. 
+# Please visit this Windows IT Pro [blog article](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/proactively-monitor-arm-based-windows-virtual-desktop-with-azure/ba-p/1508735) for all the technical steps. 
