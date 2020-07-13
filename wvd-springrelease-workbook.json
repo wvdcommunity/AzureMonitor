@@ -100,7 +100,6 @@
             "crossComponentResources": [
               "{Subscription}"
             ],
-            "value": "thovuy-pool",
             "typeSettings": {
               "additionalResourceOptions": []
             },
