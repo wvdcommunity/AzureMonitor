@@ -1293,7 +1293,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName in ('{HostPool}')\r\n| summarize count() by UserName",
+              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName like ('{HostPool}')\r\n| summarize count() by UserName",
               "size": 1,
               "title": "Top users encountering errors",
               "noDataMessage": "No errors detected in the selected time period",
@@ -1321,7 +1321,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName in ('{HostPool}')\r\n| summarize usercount = count(UserName) by CodeSymbolic, CorrelationId, TimeGenerated\r\n| project CodeSymbolic, usercount, CorrelationId, TimeGenerated\r\n| sort by usercount desc",
+              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName like ('{HostPool}')\r\n| summarize usercount = count(UserName) by CodeSymbolic, CorrelationId, TimeGenerated\r\n| project CodeSymbolic, usercount, CorrelationId, TimeGenerated\r\n| sort by usercount desc",
               "size": 1,
               "title": "WVD Errors",
               "noDataMessage": "No errors detected in the selected time period",
@@ -1349,7 +1349,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName in ('{HostPool}')\r\n| summarize usercount = count(Source) by CodeSymbolic, CorrelationId, TimeGenerated, Source\r\n| project Source, CodeSymbolic, usercount, CorrelationId, TimeGenerated",
+              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName like ('{HostPool}')\r\n| summarize usercount = count(Source) by CodeSymbolic, CorrelationId, TimeGenerated, Source\r\n| project Source, CodeSymbolic, usercount, CorrelationId, TimeGenerated",
               "size": 1,
               "title": "WVD Errors - by Source",
               "noDataMessage": "No errors returned for the selected time range",
@@ -1379,7 +1379,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName in ('{HostPool}')\r\n| summarize usercount = count(CorrelationId) by TimeGenerated, CorrelationId, CodeSymbolic, Source\r\n| project Source, CodeSymbolic, usercount, CorrelationId, TimeGenerated",
+              "query": "WVDErrors\r\n{wvd_displayserviceerrors}\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName like ('{HostPool}')\r\n| summarize usercount = count(CorrelationId) by TimeGenerated, CorrelationId, CodeSymbolic, Source\r\n| project Source, CodeSymbolic, usercount, CorrelationId, TimeGenerated",
               "size": 1,
               "title": "WVD Errors - by rolling 7 days",
               "noDataMessage": "No errors detected in the last 7 days",
@@ -1406,7 +1406,7 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "WVDErrors\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName in ('{HostPool}')\r\n{wvd_displayserviceerrors}\r\n| project [\"Error Code\"]= CodeSymbolic, Message, UserName, ActivityType, Source,  CorrelationId, TimeGenerated, [\"Host Pool\"] = _ResourceId\r\n| sort by TimeGenerated desc",
+              "query": "WVDErrors\r\n| parse _ResourceId with * \"/hostpools/\" HostPoolName\r\n| where HostPoolName like ('{HostPool}')\r\n{wvd_displayserviceerrors}\r\n| project [\"Error Code\"]= CodeSymbolic, Message, UserName, ActivityType, Source,  CorrelationId, TimeGenerated, [\"Host Pool\"] = _ResourceId\r\n| sort by TimeGenerated desc",
               "size": 0,
               "showAnalytics": true,
               "title": "WVD Error Information",
@@ -2182,6 +2182,8 @@
                     "columnMatch": "AggregatedValue",
                     "formatter": 3,
                     "formatOptions": {
+                      "min": 0,
+                      "max": 100,
                       "palette": "greenRed"
                     },
                     "numberFormat": {
