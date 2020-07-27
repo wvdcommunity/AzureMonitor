@@ -1229,7 +1229,21 @@
               "crossComponentResources": [
                 "{Workspace}"
               ],
-              "visualization": "linechart"
+              "visualization": "linechart",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "AggregatedValue",
+                    "formatter": 0,
+                    "numberFormat": {
+                      "unit": 17,
+                      "options": {
+                        "style": "decimal",
+                        "maximumFractionDigits":0
+                      }
+                    }
+                  }
+                  ]
             },
             "customWidth": "50",
             "showPin": true,
