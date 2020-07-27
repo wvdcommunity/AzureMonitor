@@ -1187,12 +1187,12 @@
               "version": "KqlItem/1.0",
               "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where CounterName == \"Active Sessions\"\r\n| extend ActiveSessions = toint(CounterValue)\r\n| project Computer, ActiveTimeStamp=TimeGenerated, ActiveSessions \r\n| join kind= inner (\r\n   Perf\r\n   | where CounterName == \"Inactive Sessions\"\r\n   | extend totalinactivesessions = toint(CounterValue)\r\n   | extend InactiveSessions = totalinactivesessions - 2\r\n   | project Computer, InactiveTimeStamp=TimeGenerated, InactiveSessions  \r\n) on Computer \r\n| where (ActiveTimeStamp - InactiveTimeStamp) between (0min .. 15s)\r\n| project ActiveSessions, InactiveSessions, bin(ActiveTimeStamp, 5m)",
               "size": 0,
-              "aggregation": 1,
+              "aggregation": 3,
               "showAnalytics": true,
-              "title": "Session Status History",
+              "title": "Session Status History (WVD)",
               "noDataMessage": "No Session History information. If you have had active sessions in the selected time period, please ensure that the collection of the Terminal Services counters into your workspace has been enabled.",
               "timeContext": {
-                "durationMs": 2592000000
+                "durationMs": 0
               },
               "timeContextFromParameter": "TimeRange",
               "queryType": 0,
@@ -1200,7 +1200,19 @@
               "crossComponentResources": [
                 "{Workspace}"
               ],
-              "visualization": "timechart"
+              "visualization": "timechart",
+              "chartSettings": {
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 17,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true,
+                      "maximumFractionDigits": 0
+                    }
+                  }
+                }
+              }
             },
             "customWidth": "50",
             "showPin": true,
@@ -1217,19 +1229,19 @@
               "version": "KqlItem/1.0",
               "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nlet Counter = dynamic([{TSSessions}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"Terminal Services\" and CounterName in (Counter)\r\n| summarize AggregatedValue = avg(CounterValue) by bin(TimeGenerated, 1h), CounterName, Computer",
               "size": 0,
+              "aggregation": 3,
               "showAnalytics": true,
-              "title": "Session Overview",
+              "title": "Session Overview (TermServer & WVD)",
               "noDataMessage": "No Session History information. If you have had active sessions in the selected time period, please ensure that the collection of the Terminal Services counters into your workspace has been enabled.",
               "timeContext": {
                 "durationMs": 2592000000
               },
-              "timeContextFromParameter": "TimeRange",
               "queryType": 0,
               "resourceType": "microsoft.operationalinsights/workspaces",
               "crossComponentResources": [
                 "{Workspace}"
               ],
-              "visualization": "linechart",
+              "visualization": "timechart",
               "gridSettings": {
                 "formatters": [
                   {
@@ -1239,11 +1251,39 @@
                       "unit": 17,
                       "options": {
                         "style": "decimal",
-                        "maximumFractionDigits":0
+                        "maximumFractionDigits": 0
                       }
                     }
                   }
-                  ]
+                ],
+                "sortBy": [
+                  {
+                    "itemKey": "TimeGenerated",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "TimeGenerated",
+                  "sortOrder": 1
+                }
+              ],
+              "chartSettings": {
+                "yAxis": [
+                  "AggregatedValue"
+                ],
+                "ySettings": {
+                  "numberFormatSettings": {
+                    "unit": 17,
+                    "options": {
+                      "style": "decimal",
+                      "useGrouping": true,
+                      "maximumFractionDigits": 0
+                    }
+                  }
+                }
+              }
             },
             "customWidth": "50",
             "showPin": true,
@@ -2387,12 +2427,12 @@
             "type": 3,
             "content": {
               "version": "KqlItem/1.0",
-              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"RemoteFX Network\" and InstanceName matches regex @\"rdp-sxs\\d{9}\\s\\d{0,6}\" and CounterName == \"Current TCP RTT\" and CounterValue > 0\r\n| summarize  RTTLatency =avg(CounterValue) by Computer, bin(TimeGenerated, 5m), InstanceName\r\n| order by RTTLatency desc",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"RemoteFX Network\" and InstanceName matches regex @\"(rdp-sxs\\d{9}\\s\\d{0,7}|rdp-sxs#\\d{0,7}|rdp-sxs \\d{0,7})\" and CounterName == \"Current TCP RTT\" and CounterValue > 0\r\n| summarize  RTTLatency =avg(CounterValue) by Computer, bin(TimeGenerated, 5m), InstanceName\r\n| order by RTTLatency desc",
               "size": 0,
               "aggregation": 3,
-              "title": "RTT Latency avg by Computer",
+              "title": "RTT Latency avg by Computer (ms)",
               "timeContext": {
-                "durationMs": 2592000000
+                "durationMs": 0
               },
               "timeContextFromParameter": "TimeRange",
               "queryType": 0,
@@ -2403,6 +2443,32 @@
               "visualization": "timechart"
             },
             "name": "hostperf-rtt"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let WVDHosts = dynamic([{WVDHosts}]);\r\nPerf\r\n| extend HostPool = '{HostPool}'\r\n| extend HostPool = strcat(HostPool, \"/\")\r\n| extend Computername = strcat(HostPool, Computer)\r\n| where Computername in (WVDHosts)\r\n| where ObjectName == \"RemoteFX Network\" and InstanceName matches regex @\"(rdp-sxs\\d{9}\\s\\d{0,7}|rdp-sxs#\\d{0,7}|rdp-sxs \\d{0,7})\" and CounterName == \"Current TCP RTT\" and CounterValue > 0\r\n| summarize  RTTLatency =avg(CounterValue) by InstanceName, bin(TimeGenerated, 5m), Computer\r\n| project RTTLatency, TimeGenerated, strcat(InstanceName, \"-\", Computer)\r\n| order by RTTLatency desc",
+              "size": 0,
+              "aggregation": 3,
+              "title": "RTT Latency avg by SessionID (ms)",
+              "timeContext": {
+                "durationMs": 0
+              },
+              "timeContextFromParameter": "TimeRange",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "{Workspace}"
+              ],
+              "visualization": "timechart",
+              "chartSettings": {
+                "group": "Column1",
+                "createOtherGroup": 0,
+                "showLegend": true
+              }
+            },
+            "name": "hostperf-rtt - Usersessions"
           }
         ]
       },
