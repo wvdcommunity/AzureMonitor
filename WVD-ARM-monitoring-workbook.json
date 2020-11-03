@@ -1331,7 +1331,18 @@
                   "typeSettings": {
                     "additionalResourceOptions": []
                   },
-                  "jsonData": "[\r\n    {\"label\":\"False\", \"value\":\"| where ServiceError == 'False'\", \"selected\":\"True\"},\r\n    {\"label\":\"True\", \"value\":\"| where ServiceError == 'True'\", \"selected\":\"False\"}\r\n]",
+                  "jsonData": [
+                    {
+                      "label": "False",
+                      "value": "| where ServiceError == 'False'",
+                      "selected": "True"
+                    },
+                    {
+                      "label": "True",
+                      "value": "| where ServiceError == 'True'",
+                      "selected": "False"
+                    }
+                  ],
                   "timeContext": {
                     "durationMs": 86400000
                   }
